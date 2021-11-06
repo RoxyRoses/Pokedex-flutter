@@ -17,47 +17,58 @@ class PokePaginaDetalhes extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final _pokemonLoja = Provider.of<PokeApiStore>(context);
-    Pokemon _pokemon = _pokemonLoja.pokemonAtual;
+    Pokemon _pokemon = _pokemonLoja.PokemonAtual;
     _corPokemon = ConstsAPI.getTipoCor(type: _pokemon.type[0]);
 
     return Scaffold(
-      appBar: AppBar(
-        title: Opacity(
-          child: Text(
-            _pokemon.name,
-            style: TextStyle(
-                fontFamily: 'Google',
-                fontWeight: FontWeight.bold,
-                fontSize: 21),
-          ),
-          opacity: 0.0,
-        ),
-        elevation: 0,
-        backgroundColor: _corPokemon,
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back),
-          onPressed: () {
-            Navigator.pop(context);
+      appBar: PreferredSize(
+        preferredSize: Size.fromHeight(50),
+        child: Observer(
+          builder: (context) {
+            return Observer(
+              builder: (BuildContext context) {
+                _corPokemon = ConstsAPI.getTipoCor(
+                    type: _pokemonLoja.PokemonAtual.type[0]);
+                return AppBar(
+                  title: Opacity(
+                    child: Text(
+                      _pokemon.name,
+                      style: TextStyle(
+                          fontFamily: 'Google',
+                          fontWeight: FontWeight.bold,
+                          fontSize: 21),
+                    ),
+                    opacity: 0.0,
+                  ),
+                  elevation: 0,
+                  backgroundColor: _corPokemon,
+                  leading: IconButton(
+                    icon: Icon(Icons.arrow_back),
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                  ),
+                  actions: <Widget>[
+                    IconButton(
+                      icon: Icon(Icons.favorite_border),
+                      onPressed: () {},
+                    ),
+                  ],
+                );
+              },
+            );
           },
         ),
-        actions: <Widget>[
-          IconButton(
-            icon: Icon(Icons.favorite_border),
-            onPressed: () {},
-          ),
-        ],
       ),
       body: Stack(
         children: <Widget>[
           Observer(builder: (context) {
-            _corPokemon = ConstsAPI.getTipoCor(type: _pokemon.type[0]);
+            _corPokemon =
+                ConstsAPI.getTipoCor(type: _pokemonLoja.PokemonAtual.type[0]);
             return Container(
               color: _corPokemon,
             );
           }),
-          Container(
-            color: _corPokemon,
-          ),
           Container(
             height: MediaQuery.of(context).size.height / 3,
           ),
@@ -79,6 +90,9 @@ class PokePaginaDetalhes extends StatelessWidget {
             child: SizedBox(
               height: 190,
               child: PageView.builder(
+                  onPageChanged: (index) {
+                    _pokemonLoja.setPokemonAtual(index: index);
+                  },
                   itemCount: _pokemonLoja.pokeApi.pokemon.length,
                   itemBuilder: (BuildContext context, int count) {
                     Pokemon _pokeItem = _pokemonLoja.getPokemon(index: count);

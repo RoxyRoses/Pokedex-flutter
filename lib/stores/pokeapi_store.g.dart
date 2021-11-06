@@ -16,13 +16,13 @@ mixin _$PokeApiStore on _PokeApiStoreBase, Store {
       (_$pokeAPIComputed ??= Computed<PokeApi>(() => super.pokeAPI,
               name: '_PokeApiStoreBase.pokeAPI'))
           .value;
-  Computed<PokeApi> _$corPokemonAtualComputed;
+  Computed<Pokemon> _$PokemonAtualComputed;
 
   @override
-  PokeApi get corPokemonAtual => (_$corPokemonAtualComputed ??=
-          Computed<PokeApi>(() => super.corPokemonAtual,
-              name: '_PokeApiStoreBase.corPokemonAtual'))
-      .value;
+  Pokemon get PokemonAtual =>
+      (_$PokemonAtualComputed ??= Computed<Pokemon>(() => super.PokemonAtual,
+              name: '_PokeApiStoreBase.PokemonAtual'))
+          .value;
 
   final _$pokeApiAtom = Atom(name: '_PokeApiStoreBase.pokeApi');
 
@@ -39,34 +39,18 @@ mixin _$PokeApiStore on _PokeApiStoreBase, Store {
     });
   }
 
-  final _$pokemonAtualAtom = Atom(name: '_PokeApiStoreBase.pokemonAtual');
+  final _$_pokemonAtualAtom = Atom(name: '_PokeApiStoreBase._pokemonAtual');
 
   @override
-  Pokemon get pokemonAtual {
-    _$pokemonAtualAtom.reportRead();
-    return super.pokemonAtual;
+  Pokemon get _pokemonAtual {
+    _$_pokemonAtualAtom.reportRead();
+    return super._pokemonAtual;
   }
 
   @override
-  set pokemonAtual(Pokemon value) {
-    _$pokemonAtualAtom.reportWrite(value, super.pokemonAtual, () {
-      super.pokemonAtual = value;
-    });
-  }
-
-  final _$_corPokemonAtualAtom =
-      Atom(name: '_PokeApiStoreBase._corPokemonAtual');
-
-  @override
-  dynamic get _corPokemonAtual {
-    _$_corPokemonAtualAtom.reportRead();
-    return super._corPokemonAtual;
-  }
-
-  @override
-  set _corPokemonAtual(dynamic value) {
-    _$_corPokemonAtualAtom.reportWrite(value, super._corPokemonAtual, () {
-      super._corPokemonAtual = value;
+  set _pokemonAtual(Pokemon value) {
+    _$_pokemonAtualAtom.reportWrite(value, super._pokemonAtual, () {
+      super._pokemonAtual = value;
     });
   }
 
@@ -121,9 +105,8 @@ mixin _$PokeApiStore on _PokeApiStoreBase, Store {
   String toString() {
     return '''
 pokeApi: ${pokeApi},
-pokemonAtual: ${pokemonAtual},
 pokeAPI: ${pokeAPI},
-corPokemonAtual: ${corPokemonAtual}
+PokemonAtual: ${PokemonAtual}
     ''';
   }
 }
