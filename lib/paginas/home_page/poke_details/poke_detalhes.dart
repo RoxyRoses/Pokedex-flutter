@@ -17,7 +17,7 @@ class PokePaginaDetalhes extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final _pokemonLoja = Provider.of<PokeApiStore>(context);
-    Pokemon _pokemon = _pokemonLoja.getPokemon(index: this.index);
+    Pokemon _pokemon = _pokemonLoja.pokemonAtual;
     _corPokemon = ConstsAPI.getTipoCor(type: _pokemon.type[0]);
 
     return Scaffold(
@@ -47,9 +47,17 @@ class PokePaginaDetalhes extends StatelessWidget {
           ),
         ],
       ),
-      backgroundColor: _corPokemon,
       body: Stack(
         children: <Widget>[
+          Observer(builder: (context) {
+            _corPokemon = ConstsAPI.getTipoCor(type: _pokemon.type[0]);
+            return Container(
+              color: _corPokemon,
+            );
+          }),
+          Container(
+            color: _corPokemon,
+          ),
           Container(
             height: MediaQuery.of(context).size.height / 3,
           ),
@@ -67,7 +75,7 @@ class PokePaginaDetalhes extends StatelessWidget {
               );
             },
           ),
-          Positioned(
+          Padding(
             child: SizedBox(
               height: 190,
               child: PageView.builder(
@@ -85,6 +93,7 @@ class PokePaginaDetalhes extends StatelessWidget {
                     );
                   }),
             ),
+            padding: EdgeInsets.only(top: 50),
           ),
         ],
       ),

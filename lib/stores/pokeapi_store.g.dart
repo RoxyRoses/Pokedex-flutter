@@ -16,6 +16,13 @@ mixin _$PokeApiStore on _PokeApiStoreBase, Store {
       (_$pokeAPIComputed ??= Computed<PokeApi>(() => super.pokeAPI,
               name: '_PokeApiStoreBase.pokeAPI'))
           .value;
+  Computed<PokeApi> _$corPokemonAtualComputed;
+
+  @override
+  PokeApi get corPokemonAtual => (_$corPokemonAtualComputed ??=
+          Computed<PokeApi>(() => super.corPokemonAtual,
+              name: '_PokeApiStoreBase.corPokemonAtual'))
+      .value;
 
   final _$pokeApiAtom = Atom(name: '_PokeApiStoreBase.pokeApi');
 
@@ -29,6 +36,37 @@ mixin _$PokeApiStore on _PokeApiStoreBase, Store {
   set pokeApi(PokeApi value) {
     _$pokeApiAtom.reportWrite(value, super.pokeApi, () {
       super.pokeApi = value;
+    });
+  }
+
+  final _$pokemonAtualAtom = Atom(name: '_PokeApiStoreBase.pokemonAtual');
+
+  @override
+  Pokemon get pokemonAtual {
+    _$pokemonAtualAtom.reportRead();
+    return super.pokemonAtual;
+  }
+
+  @override
+  set pokemonAtual(Pokemon value) {
+    _$pokemonAtualAtom.reportWrite(value, super.pokemonAtual, () {
+      super.pokemonAtual = value;
+    });
+  }
+
+  final _$_corPokemonAtualAtom =
+      Atom(name: '_PokeApiStoreBase._corPokemonAtual');
+
+  @override
+  dynamic get _corPokemonAtual {
+    _$_corPokemonAtualAtom.reportRead();
+    return super._corPokemonAtual;
+  }
+
+  @override
+  set _corPokemonAtual(dynamic value) {
+    _$_corPokemonAtualAtom.reportWrite(value, super._corPokemonAtual, () {
+      super._corPokemonAtual = value;
     });
   }
 
@@ -58,6 +96,17 @@ mixin _$PokeApiStore on _PokeApiStoreBase, Store {
   }
 
   @override
+  dynamic setPokemonAtual({int index}) {
+    final _$actionInfo = _$_PokeApiStoreBaseActionController.startAction(
+        name: '_PokeApiStoreBase.setPokemonAtual');
+    try {
+      return super.setPokemonAtual(index: index);
+    } finally {
+      _$_PokeApiStoreBaseActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
   Widget getImagem({String numero}) {
     final _$actionInfo = _$_PokeApiStoreBaseActionController.startAction(
         name: '_PokeApiStoreBase.getImagem');
@@ -72,7 +121,9 @@ mixin _$PokeApiStore on _PokeApiStoreBase, Store {
   String toString() {
     return '''
 pokeApi: ${pokeApi},
-pokeAPI: ${pokeAPI}
+pokemonAtual: ${pokemonAtual},
+pokeAPI: ${pokeAPI},
+corPokemonAtual: ${corPokemonAtual}
     ''';
   }
 }
