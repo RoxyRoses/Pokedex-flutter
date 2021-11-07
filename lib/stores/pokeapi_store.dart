@@ -18,6 +18,9 @@ abstract class _PokeApiStoreBase with Store {
   @observable
   Pokemon _pokemonAtual;
 
+  @observable
+  dynamic corPokemon;
+
   @computed
   PokeApi get pokeAPI => pokeApi;
 
@@ -33,13 +36,14 @@ abstract class _PokeApiStoreBase with Store {
   }
 
   @action
-  getPokemon({int index}) {
+  Pokemon getPokemon({int index}) {
     return pokeApi.pokemon[index];
   }
 
   @action
   setPokemonAtual({int index}) {
     _pokemonAtual = pokeApi.pokemon[index];
+    corPokemon = ConstsAPI.getTipoCor(type: _pokemonAtual.type[0]);
   }
 
   @action
