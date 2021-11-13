@@ -7,6 +7,7 @@ import 'package:pokedex/consts/consts_app.dart';
 import 'package:pokedex/models/pokeapi.dart';
 import 'package:pokedex/paginas/home_page/widgets/poke_item.dart';
 import 'package:pokedex/stores/pokeapi_store.dart';
+import 'package:simple_animations/simple_animations.dart';
 import 'package:sliding_sheet/sliding_sheet.dart';
 
 class PokePaginaDetalhes extends StatefulWidget {
@@ -22,6 +23,7 @@ class _PokePaginaDetalhesState extends State<PokePaginaDetalhes> {
   PageController _pageController;
   Pokemon _pokemon;
   PokeApiStore _pokemonLoja;
+  MultiTrackTween _animacao;
 
   @override
   void initState() {
@@ -29,6 +31,10 @@ class _PokePaginaDetalhesState extends State<PokePaginaDetalhes> {
     _pageController = PageController(initialPage: widget.index);
     _pokemonLoja = GetIt.instance<PokeApiStore>();
     _pokemon = _pokemonLoja.PokemonAtual;
+    _animacao = MultiTrackTween([
+      Track("rotation").add(Duration(seconds: 5), Tween(begin: 0.0, end: 6.0),
+          curve: Curves.linear)
+    ]);
   }
 
   @override
@@ -104,31 +110,51 @@ class _PokePaginaDetalhesState extends State<PokePaginaDetalhes> {
                     _pokemonLoja.setPokemonAtual(index: index);
                   },
                   itemCount: _pokemonLoja.pokeApi.pokemon.length,
-                  itemBuilder: (BuildContext context, int count) {
-                    Pokemon _pokeItem = _pokemonLoja.getPokemon(index: count);
+                  itemBuilder: (BuildContext context, int index) {
+                    Pokemon _pokeItem = _pokemonLoja.getPokemon(index: index);
                     return Stack(
                       alignment: Alignment.center,
                       children: [
-                        Hero(
-                          tag: count.toString(),
-                          child: Opacity(
-                            child: Image.asset(
-                              ConstsApp.pokebolaBranca,
-                              height: 280,
-                              width: 280,
+                        ControlledAnimation(
+                            playback: Playback.LOOP,
+                            duration: _animacao.duration,
+                            tween: _animacao,
+                            builder: (context, animation) {
+                              return Transform.rotate(
+                                child: Hero(
+                                  tag: index.toString(),
+                                  child: Opacity(
+                                    child: Image.asset(
+                                      ConstsApp.pokebolaBranca,
+                                      height: 280,
+                                      width: 280,
+                                    ),
+                                    opacity: 0.2,
+                                  ),
+                                ),
+                                angle: animation['rotation'],
+                              );
+                            }),
+                        Observer(builder: (context) {
+                          return AnimatedPadding(
+                            duration: Duration(milliseconds: 400),
+                            curve: Curves.bounceInOut,
+                            padding: EdgeInsets.all(
+                                index == _pokemonLoja.posicaoAtual ? 0 : 60),
+                            child: CachedNetworkImage(
+                              height: 180,
+                              width: 180,
+                              placeholder: (context, url) => new Container(
+                                color: Colors.transparent,
+                              ),
+                              color: index == _pokemonLoja.posicaoAtual
+                                  ? null
+                                  : Colors.black.withOpacity(0.5),
+                              imageUrl:
+                                  'https://raw.githubusercontent.com/fanzeyi/pokemon.json/master/images/${_pokeItem.num}.png',
                             ),
-                            opacity: 0.2,
-                          ),
-                        ),
-                        CachedNetworkImage(
-                          height: 180,
-                          width: 180,
-                          placeholder: (context, url) => new Container(
-                            color: Colors.transparent,
-                          ),
-                          imageUrl:
-                              'https://raw.githubusercontent.com/fanzeyi/pokemon.json/master/images/${_pokeItem.num}.png',
-                        ),
+                          );
+                        }),
                       ],
                     );
                   }),
