@@ -56,9 +56,23 @@ class PokeItem extends StatelessWidget {
       padding: const EdgeInsets.all(8.0),
       child: Container(
         child: Padding(
-          padding: const EdgeInsets.all(2.0),
+          padding: const EdgeInsets.all(8.0),
           child: Stack(
             children: <Widget>[
+              Align(
+                alignment: Alignment.bottomRight,
+                child: Hero(
+                  child: Opacity(
+                    child: Image.asset(
+                      ConstsApp.pokebolaBranca,
+                      height: 90,
+                      width: 90,
+                    ),
+                    opacity: 0.2,
+                  ),
+                  tag: nome + 'rotation',
+                ),
+              ),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -81,27 +95,17 @@ class PokeItem extends StatelessWidget {
               Align(
                 alignment: Alignment.bottomRight,
                 child: Hero(
-                  tag: index.toString(),
-                  child: Opacity(
-                    child: Image.asset(
-                      ConstsApp.pokebolaBranca,
-                      height: 90,
-                      width: 90,
+                  tag: nome,
+                  child: CachedNetworkImage(
+                    alignment: Alignment.bottomRight,
+                    height: 90,
+                    width: 90,
+                    placeholder: (context, url) => new Container(
+                      color: Colors.transparent,
                     ),
-                    opacity: 0.2,
+                    imageUrl:
+                        'https://raw.githubusercontent.com/fanzeyi/pokemon.json/master/images/$num.png',
                   ),
-                ),
-              ),
-              Align(
-                alignment: Alignment.bottomRight,
-                child: CachedNetworkImage(
-                  height: 90,
-                  width: 90,
-                  placeholder: (context, url) => new Container(
-                    color: Colors.transparent,
-                  ),
-                  imageUrl:
-                      'https://raw.githubusercontent.com/fanzeyi/pokemon.json/master/images/$num.png',
                 ),
               ),
             ],
