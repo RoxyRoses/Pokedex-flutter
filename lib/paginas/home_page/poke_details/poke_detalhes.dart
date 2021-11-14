@@ -21,20 +21,20 @@ class PokePaginaDetalhes extends StatefulWidget {
 
 class _PokePaginaDetalhesState extends State<PokePaginaDetalhes> {
   PageController _pageController;
-  Pokemon _pokemon;
+
   PokeApiStore _pokemonLoja;
   MultiTrackTween _animacao;
   double _progresso;
-  double _multiplo = 1;
+  double _multiplo;
   double _opacidade;
   double _tituloOpacidadeAppBar;
 
   @override
   void initState() {
     super.initState();
-    _pageController = PageController(initialPage: widget.index);
+    _pageController =
+        PageController(initialPage: widget.index, viewportFraction: 0.5);
     _pokemonLoja = GetIt.instance<PokeApiStore>();
-    _pokemon = _pokemonLoja.PokemonAtual;
     _animacao = MultiTrackTween([
       Track("rotation").add(Duration(seconds: 5), Tween(begin: 0.0, end: 6.0),
           curve: Curves.linear)
@@ -50,7 +50,7 @@ class _PokePaginaDetalhesState extends State<PokePaginaDetalhes> {
   double intervalo(double baixo, double cima, double progresso) {
     assert(baixo < cima);
 
-    if (progresso < cima) return 1.0;
+    if (progresso > cima) return 1.0;
     if (progresso < baixo) return 0.0;
 
     return ((progresso - baixo) / (cima - baixo)).clamp(0.0, 1.0);
@@ -59,87 +59,117 @@ class _PokePaginaDetalhesState extends State<PokePaginaDetalhes> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: PreferredSize(
-        preferredSize: Size.fromHeight(50),
-        child: Observer(
-          builder: (context) {
-            return Observer(
-              builder: (BuildContext context) {
-                return AppBar(
-                  title: Opacity(
-                    child: Text(
-                      _pokemon.name,
-                      style: TextStyle(
-                          fontFamily: 'Google',
-                          fontWeight: FontWeight.bold,
-                          fontSize: 21),
-                    ),
-                    opacity: _tituloOpacidadeAppBar,
-                  ),
-                  elevation: 0,
-                  backgroundColor: _pokemonLoja.corPokemon,
-                  leading: IconButton(
-                    icon: Icon(Icons.arrow_back),
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
-                  ),
-                  actions: <Widget>[
-                    Align(
-                      alignment: Alignment.centerRight,
-                      child: Stack(
-                        alignment: Alignment.center,
-                        children: <Widget>[
-                          Stack(
-                            alignment: Alignment.center,
-                            children: <Widget>[
-                              ControlledAnimation(
-                                  playback: Playback.LOOP,
-                                  duration: _animacao.duration,
-                                  tween: _animacao,
-                                  builder: (context, animation) {
-                                    return Transform.rotate(
-                                      child: AnimatedOpacity(
-                                        duration: Duration(microseconds: 200),
-                                        child: Image.asset(
-                                          ConstsApp.pokebolaBranca,
-                                          height: 50,
-                                          width: 50,
-                                        ),
-                                        opacity: _tituloOpacidadeAppBar >= 0.2
-                                            ? 0.2
-                                            : 0.0,
-                                      ),
-                                      angle: animation['rotation'],
-                                    );
-                                  }),
-                              IconButton(
-                                icon: Icon(Icons.favorite_border),
-                                onPressed: () {
-                                  Navigator.pop(context);
-                                },
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                );
-              },
-            );
-          },
-        ),
-      ),
       body: Stack(
         children: <Widget>[
           Observer(
             builder: (context) {
-              return Container(color: _pokemonLoja.corPokemon);
+              return AnimatedContainer(
+                child: Stack(
+                  children: [
+                    AppBar(
+                      centerTitle: true,
+                      elevation: 0,
+                      backgroundColor: Colors.transparent,
+                      leading: IconButton(
+                        icon: Icon(Icons.arrow_back),
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
+                      ),
+                      actions: <Widget>[
+                        Align(
+                          alignment: Alignment.centerRight,
+                          child: Stack(
+                            alignment: Alignment.center,
+                            children: <Widget>[
+                              Stack(
+                                alignment: Alignment.center,
+                                children: <Widget>[
+                                  ControlledAnimation(
+                                      playback: Playback.LOOP,
+                                      duration: _animacao.duration,
+                                      tween: _animacao,
+                                      builder: (context, animation) {
+                                        return Transform.rotate(
+                                          child: AnimatedOpacity(
+                                            duration:
+                                                Duration(microseconds: 200),
+                                            child: Image.asset(
+                                              ConstsApp.pokebolaBranca,
+                                              height: 50,
+                                              width: 50,
+                                            ),
+                                            opacity:
+                                                _tituloOpacidadeAppBar >= 0.2
+                                                    ? 0.2
+                                                    : 0.0,
+                                          ),
+                                          angle: animation['rotation'],
+                                        );
+                                      }),
+                                  IconButton(
+                                    icon: Icon(Icons.favorite_border),
+                                    onPressed: () {
+                                      Navigator.pop(context);
+                                    },
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                    Positioned(
+                      top: (MediaQuery.of(context).size.height * 0.06) -
+                          _progresso *
+                              (MediaQuery.of(context).size.height * 0.060),
+                      left: 20 +
+                          _progresso *
+                              (MediaQuery.of(context).size.height * 0.060),
+                      child: Text(
+                        _pokemonLoja.PokemonAtual.name,
+                        style: TextStyle(
+                            fontFamily: 'Google',
+                            fontSize: 35 -
+                                _progresso *
+                                    (MediaQuery.of(context).size.height *
+                                        0.009),
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white),
+                      ),
+                    ),
+                    Positioned(
+                      top: MediaQuery.of(context).size.height * 0.10,
+                      child: SizedBox(
+                        width: MediaQuery.of(context).size.width,
+                        child: Padding(
+                          padding: const EdgeInsets.only(
+                              top: 30, left: 20, right: 20),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              setTipos(_pokemonLoja.PokemonAtual.type),
+                              Text(
+                                '#' + _pokemonLoja.PokemonAtual.num.toString(),
+                                style: TextStyle(
+                                    fontFamily: 'Google',
+                                    fontSize: 26,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.white),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                height: MediaQuery.of(context).size.height / 3,
+                color: _pokemonLoja.corPokemon,
+                duration: Duration(milliseconds: 300),
+              );
             },
-          ),
-          Container(
-            height: MediaQuery.of(context).size.height / 3,
           ),
           SlidingSheet(
             listener: (state) {
@@ -155,7 +185,7 @@ class _PokePaginaDetalhesState extends State<PokePaginaDetalhes> {
             cornerRadius: 30,
             snapSpec: const SnapSpec(
               snap: true,
-              snappings: [0.60, 0.87],
+              snappings: [0.60, 0.95],
               positioning: SnapPositioning.relativeToAvailableSpace,
             ),
             builder: (context, state) {
@@ -254,11 +284,48 @@ class _PokePaginaDetalhesState extends State<PokePaginaDetalhes> {
               padding: EdgeInsets.only(
                   top: _tituloOpacidadeAppBar == 1
                       ? 1000
-                      : 60 - _progresso * 50),
+                      : (MediaQuery.of(context).size.height * 0.20) -
+                          _progresso * 50),
             ),
           ),
         ],
       ),
+    );
+  }
+
+  Widget setTipos(List<String> tipos) {
+    List<Widget> lista = [];
+    tipos.forEach((nome) {
+      lista.add(
+        Row(
+          children: <Widget>[
+            Container(
+              padding: EdgeInsets.all(0),
+              decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(20),
+                  color: Color.fromARGB(80, 255, 255, 255)),
+              child: Padding(
+                padding: const EdgeInsets.all(6.0),
+                child: Text(
+                  nome.trim(),
+                  style: TextStyle(
+                      fontFamily: 'Google',
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white),
+                ),
+              ),
+            ),
+            SizedBox(
+              width: 8,
+            )
+          ],
+        ),
+      );
+    });
+    return Row(
+      children: lista,
+      crossAxisAlignment: CrossAxisAlignment.start,
     );
   }
 }

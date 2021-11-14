@@ -37,7 +37,7 @@ class _HomePageState extends State<HomePage> {
         alignment: Alignment.topCenter,
         children: <Widget>[
           Positioned(
-            top: -(240 / 4.5),
+            top: MediaQuery.of(context).padding.top - 240 / 1.9,
             left: widthTela - (240 / 1.6),
             child: Opacity(
               child: Image.asset(
