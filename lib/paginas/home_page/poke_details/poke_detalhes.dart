@@ -5,6 +5,7 @@ import 'package:get_it/get_it.dart';
 import 'package:pokedex/consts/consts_api.dart';
 import 'package:pokedex/consts/consts_app.dart';
 import 'package:pokedex/models/pokeapi.dart';
+import 'package:pokedex/paginas/home_page/about_page/about_page.dart';
 import 'package:pokedex/paginas/home_page/widgets/poke_item.dart';
 import 'package:pokedex/stores/pokeapi_store.dart';
 import 'package:simple_animations/simple_animations.dart';
@@ -64,6 +65,14 @@ class _PokePaginaDetalhesState extends State<PokePaginaDetalhes> {
           Observer(
             builder: (context) {
               return AnimatedContainer(
+                decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                        begin: Alignment.topCenter,
+                        end: Alignment.bottomCenter,
+                        colors: [
+                      _pokemonLoja.corPokemon.withOpacity(0.7),
+                      _pokemonLoja.corPokemon,
+                    ])),
                 child: Stack(
                   children: [
                     AppBar(
@@ -121,7 +130,7 @@ class _PokePaginaDetalhesState extends State<PokePaginaDetalhes> {
                       ],
                     ),
                     Positioned(
-                      top: (MediaQuery.of(context).size.height * 0.06) -
+                      top: (MediaQuery.of(context).size.height * 0.08) -
                           _progresso *
                               (MediaQuery.of(context).size.height * 0.060),
                       left: 20 +
@@ -166,7 +175,6 @@ class _PokePaginaDetalhesState extends State<PokePaginaDetalhes> {
                   ],
                 ),
                 height: MediaQuery.of(context).size.height / 3,
-                color: _pokemonLoja.corPokemon,
                 duration: Duration(milliseconds: 300),
               );
             },
@@ -190,8 +198,10 @@ class _PokePaginaDetalhesState extends State<PokePaginaDetalhes> {
             ),
             builder: (context, state) {
               return Container(
-                  height: MediaQuery.of(context).size.height //AboutPage(),
-                  );
+                height: MediaQuery.of(context).size.height -
+                    MediaQuery.of(context).size.height * 0.10,
+                child: AboutPage(),
+              );
             },
           ),
           Opacity(
