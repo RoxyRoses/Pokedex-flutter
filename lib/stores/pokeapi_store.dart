@@ -5,6 +5,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:mobx/mobx.dart';
 import 'package:pokedex/consts/consts_api.dart';
+import 'package:pokedex/consts/consts_app.dart';
 import 'package:pokedex/models/pokeapi.dart';
 import 'package:http/http.dart' as http;
 part 'pokeapi_store.g.dart';
@@ -46,7 +47,7 @@ abstract class _PokeApiStoreBase with Store {
   @action
   setPokemonAtual({int index}) {
     _pokemonAtual = pokeApi.pokemon[index];
-    corPokemon = ConstsAPI.getTipoCor(type: _pokemonAtual.type[0]);
+    corPokemon = ConstsApp.getTipoCor(type: _pokemonAtual.type[0]);
     posicaoAtual = index;
   }
 

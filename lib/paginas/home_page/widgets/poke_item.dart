@@ -116,8 +116,8 @@ class PokeItem extends StatelessWidget {
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
             colors: [
-              ConstsAPI.getTipoCor(type: tipos[0]).withOpacity(0.6),
-              ConstsAPI.getTipoCor(type: tipos[0])
+              ConstsApp.getTipoCor(type: tipos[0]).withOpacity(0.6),
+              ConstsApp.getTipoCor(type: tipos[0])
             ],
           ),
           borderRadius: BorderRadius.all(

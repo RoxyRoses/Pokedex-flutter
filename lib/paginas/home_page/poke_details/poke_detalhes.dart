@@ -8,6 +8,7 @@ import 'package:pokedex/models/pokeapi.dart';
 import 'package:pokedex/paginas/home_page/about_page/about_page.dart';
 import 'package:pokedex/paginas/home_page/widgets/poke_item.dart';
 import 'package:pokedex/stores/pokeapi_store.dart';
+import 'package:pokedex/stores/pokeapiv2_store.dart';
 import 'package:simple_animations/simple_animations.dart';
 import 'package:sliding_sheet/sliding_sheet.dart';
 
@@ -24,6 +25,7 @@ class _PokePaginaDetalhesState extends State<PokePaginaDetalhes> {
   PageController _pageController;
 
   PokeApiStore _pokemonLoja;
+  PokeApiV2Store _pokeApiV2Store;
   MultiTrackTween _animacao;
   double _progresso;
   double _multiplo;
@@ -36,6 +38,7 @@ class _PokePaginaDetalhesState extends State<PokePaginaDetalhes> {
     _pageController =
         PageController(initialPage: widget.index, viewportFraction: 0.5);
     _pokemonLoja = GetIt.instance<PokeApiStore>();
+    _pokeApiV2Store = GetIt.instance<PokeApiV2Store>();
     _animacao = MultiTrackTween([
       Track("rotation").add(Duration(seconds: 5), Tween(begin: 0.0, end: 6.0),
           curve: Curves.linear)
@@ -215,6 +218,11 @@ class _PokePaginaDetalhesState extends State<PokePaginaDetalhes> {
                     controller: _pageController,
                     onPageChanged: (index) {
                       _pokemonLoja.setPokemonAtual(index: index);
+                      _pokeApiV2Store
+                          .getInfoPokemon(_pokemonLoja.PokemonAtual.name);
+                      _pokeApiV2Store.getInfoSpecie(
+                        _pokemonLoja.PokemonAtual.id.toString(),
+                      );
                     },
                     itemCount: _pokemonLoja.pokeApi.pokemon.length,
                     itemBuilder: (BuildContext context, int index) {
