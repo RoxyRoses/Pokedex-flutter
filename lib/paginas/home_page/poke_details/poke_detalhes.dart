@@ -2,11 +2,9 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:get_it/get_it.dart';
-import 'package:pokedex/consts/consts_api.dart';
 import 'package:pokedex/consts/consts_app.dart';
 import 'package:pokedex/models/pokeapi.dart';
 import 'package:pokedex/paginas/home_page/about_page/about_page.dart';
-import 'package:pokedex/paginas/home_page/widgets/poke_item.dart';
 import 'package:pokedex/stores/pokeapi_store.dart';
 import 'package:pokedex/stores/pokeapiv2_store.dart';
 import 'package:simple_animations/simple_animations.dart';
@@ -39,6 +37,10 @@ class _PokePaginaDetalhesState extends State<PokePaginaDetalhes> {
         PageController(initialPage: widget.index, viewportFraction: 0.5);
     _pokemonLoja = GetIt.instance<PokeApiStore>();
     _pokeApiV2Store = GetIt.instance<PokeApiV2Store>();
+    _pokeApiV2Store.getInfoPokemon(_pokemonLoja.PokemonAtual.name);
+    _pokeApiV2Store.getInfoSpecie(
+      _pokemonLoja.PokemonAtual.id.toString(),
+    );
     _animacao = MultiTrackTween([
       Track("rotation").add(Duration(seconds: 5), Tween(begin: 0.0, end: 6.0),
           curve: Curves.linear)
