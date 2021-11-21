@@ -53,6 +53,13 @@ dev_dependencies:
   mobx_codegen:
   build_runner:
 
+  flutter_launcher_icons: ^0.9.2
+
+flutter_icons:
+  image_path: "assets/imagens/pokeball_dark.png"
+  android: true
+  ios: true
+
   # The "flutter_lints" package below contains a set of recommended lints to
   # encourage good coding practices. The lint set provided by the package is
   # activated in the `analysis_options.yaml` file located at the root of your
